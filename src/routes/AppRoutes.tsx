@@ -15,7 +15,6 @@ const ResetPasswordPage = lazy(() => import('@/pages/public/ResetPassword'));
 const ContactPage = lazy(() => import('@/pages/public/Contact'));
 
 // User pages
-const UserDashboard = lazy(() => import('@/pages/user/Dashboard'));
 const UserServices = lazy(() => import('@/pages/user/Services'));
 const UserServiceDetails = lazy(() => import('@/pages/user/ServiceDetails'));
 const UserBooking = lazy(() => import('@/pages/user/Booking'));
@@ -68,7 +67,6 @@ export const AppRoutes: React.FC = () => {
 
         {/* User routes */}
         <Route element={<ProtectedRoute allowedRoles={[UserRole.USER]} />}>
-          <Route path={ROUTES.USER_DASHBOARD} element={<UserDashboard />} />
           <Route path={ROUTES.USER_MY_BOOKINGS} element={<UserMyBookings />} />
           <Route path={ROUTES.USER_PROFILE} element={<UserProfile />} />
         </Route>

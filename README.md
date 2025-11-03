@@ -86,11 +86,27 @@ src/
 
 ## 🔐 Authentication
 
-The app includes role-based authentication with the following demo credentials:
+The app includes automatic role-based authentication based on email patterns. Use any of these demo credentials:
 
-- **Customer**: `user@demo.com` / `Demo123!`
-- **Provider**: `provider@demo.com` / `Demo123!`
-- **Admin**: `admin@demo.com` / `Demo123!`
+### Customer Accounts (Regular Users)
+- `user@demo.com` / `Demo123!`
+- `john.doe@gmail.com` / `Demo123!`
+- `jane.smith@yahoo.com` / `Demo123!`
+- `customer@example.com` / `Demo123!`
+
+### Provider Accounts (Service Providers)
+- `provider@demo.com` / `Demo123!`
+- `alex.provider@homehelper.com` / `Demo123!`
+- `maria.cleaner@services.com` / `Demo123!`
+- `mike.plumber@fixit.com` / `Demo123!`
+- `sarah.electrician@homehelper.com` / `Demo123!`
+
+### Admin Accounts (Administrators)
+- `admin@demo.com` / `Demo123!`
+- `admin@homehelper.com` / `Demo123!`
+- `support@homehelper.com` / `Demo123!`
+
+**Note**: User roles are automatically determined by email patterns. No need to select a role during login.
 
 ## 📱 Responsive Design
 

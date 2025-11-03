@@ -38,7 +38,7 @@ export interface LoginCredentials {
 
 export interface RegisterData extends LoginCredentials {
   name: string;
-  role: UserRole;
+  role?: UserRole; // Optional - will be determined automatically by email pattern
   phone?: string;
 }
 
@@ -50,6 +50,8 @@ export interface ServiceProvider extends User {
   verified: boolean;
   bio?: string;
   experience?: number; // years
+  cnic?: string; // CNIC/ID number
+  serviceExperience?: Record<string, number>; // Experience per service category
 }
 
 export interface Availability {

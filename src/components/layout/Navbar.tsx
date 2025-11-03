@@ -55,7 +55,7 @@ export const Navbar: React.FC = () => {
   const getDashboardRoute = () => {
     if (isAdmin()) return ROUTES.ADMIN_DASHBOARD;
     if (isProvider()) return ROUTES.PROVIDER_DASHBOARD;
-    if (isUser()) return ROUTES.USER_DASHBOARD;
+    if (isUser()) return ROUTES.USER_SERVICES;
     return ROUTES.HOME;
   };
 
@@ -92,7 +92,6 @@ export const Navbar: React.FC = () => {
 
     // User role
     return [
-      { path: ROUTES.USER_DASHBOARD, label: 'Dashboard' },
       { path: ROUTES.USER_SERVICES, label: 'Services' },
       { path: ROUTES.USER_MY_BOOKINGS, label: 'My Bookings' },
       { path: `${ROUTES.HOME}#about`, label: 'About' },

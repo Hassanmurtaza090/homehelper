@@ -2,6 +2,8 @@ export const APP_NAME = 'HomeHelper';
 export const APP_VERSION = '1.0.0';
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 export const MOCK_API = (import.meta as any).env?.VITE_MOCK_API !== 'false';
+console.log('🔧 Environment check - VITE_MOCK_API:', (import.meta as any).env?.VITE_MOCK_API);
+console.log('🔧 MOCK_API final value:', MOCK_API);
 
 export const ROUTES = {
   // Public routes
@@ -13,7 +15,6 @@ export const ROUTES = {
   CONTACT: '/contact',
   
   // User routes
-  USER_DASHBOARD: '/user/dashboard',
   USER_SERVICES: '/user/services',
   USER_SERVICE_DETAILS: '/user/services/:id',
   USER_BOOKING: '/user/booking/:id',

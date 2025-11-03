@@ -38,7 +38,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         redirectPath = ROUTES.PROVIDER_DASHBOARD;
         break;
       case UserRole.USER:
-        redirectPath = ROUTES.USER_DASHBOARD;
+        redirectPath = ROUTES.USER_SERVICES;
         break;
     }
     return <Navigate to={redirectPath} replace />;

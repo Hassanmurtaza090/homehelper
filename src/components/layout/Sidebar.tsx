@@ -83,6 +83,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="ml-3">
                 <p className="text-white font-medium">{user.name}</p>
                 <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+                {user.role === 'provider' && (
+                  <div className="flex items-center mt-1">
+                    <svg className="w-3 h-3 text-accent mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="text-xs text-accent">4.7</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -99,8 +107,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className={({ isActive }) => `
                   flex items-center px-3 py-2 rounded-lg transition-colors
                   ${isActive 
-                    ? 'bg-primary text-white' 
-                    : ' '}
+                    ? 'bg-primary text-white shadow-lg' 
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'}
                   ${isCollapsed ? 'justify-center' : ''}
                 `}
                 title={isCollapsed ? item.label : undefined}
@@ -110,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <>
                     <span className="ml-3">{item.label}</span>
                     {item.badge && (
-                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                      <span className="ml-auto bg-secondary text-white text-xs px-2 py-1 rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -128,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={handleLogout}
           className={`
             w-full flex items-center px-3 py-2 text-gray-300
-            rounded-lg   transition-colors
+            rounded-lg hover:bg-gray-800 hover:text-white transition-colors
             ${isCollapsed ? 'justify-center' : ''}
           `}
           title={isCollapsed ? 'Logout' : undefined}

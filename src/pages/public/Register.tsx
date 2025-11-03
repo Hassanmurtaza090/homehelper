@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { validateEmail, validatePassword, validateName, validatePhone } from '@/utils/validators';
+import { validateEmail, validatePassword, validateName } from '@/utils/validators';
 import { ROUTES } from '@/utils/constants';
 import { UserRole } from '@/types/user';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { register, isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
-  
-  const initialRole = (searchParams.get('role') as UserRole) || UserRole.USER;
   
   const [formData, setFormData] = useState({
     name: '',
@@ -22,7 +19,6 @@ const RegisterPage: React.FC = () => {
     password: '',
     confirmPassword: '',
     phone: '',
-    role: initialRole,
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -36,9 +32,11 @@ const RegisterPage: React.FC = () => {
       if (from) {
         navigate(from, { replace: true });
       } else if (user?.role === UserRole.PROVIDER) {
-        navigate(ROUTES.PROVIDER_PROFILE, { replace: true });
+        navigate(ROUTES.PROVIDER_DASHBOARD, { replace: true });
+      } else if (user?.role === UserRole.ADMIN) {
+        navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
       } else {
-        navigate('/dashboard', { replace: true });
+        navigate(ROUTES.USER_SERVICES, { replace: true });
       }
     }
   }, [isAuthenticated, navigate, location, user]);
@@ -102,7 +100,7 @@ const RegisterPage: React.FC = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: formData.role,
+        role: undefined, // Role will be determined automatically by email pattern
       });
       // Navigation is handled by useEffect above
     } catch (error: any) {
@@ -113,10 +111,6 @@ const RegisterPage: React.FC = () => {
     }
   };
   
-  const roleOptions = [
-    { value: UserRole.USER, label: 'Customer', description: 'Book services for your home' },
-    { value: UserRole.PROVIDER, label: 'Service Provider', description: 'Offer your services to customers' },
-  ];
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -135,6 +129,9 @@ const RegisterPage: React.FC = () => {
             <Link to={ROUTES.LOGIN} className="font-medium text-primary ">
               Sign in
             </Link>
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
+            💡 Your account type will be automatically determined by your email address
           </p>
         </div>
         
@@ -159,9 +156,6 @@ const RegisterPage: React.FC = () => {
             
             {currentStep === 1 ? (
               <div className="space-y-4">
-                {/* Role selection simplified: default to user unless role=provider in query */}
-                <input type="hidden" name="role" value={formData.role} />
-                
                 <Input
                   type="text"
                   name="name"
@@ -194,7 +188,16 @@ const RegisterPage: React.FC = () => {
                   }
                 />
                 
-                {/* Phone removed from required fields for simple signup */}
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-xs text-blue-800">
+                    <strong>Account Type Detection:</strong>
+                  </p>
+                  <ul className="text-xs text-blue-700 mt-1 space-y-1">
+                    <li>• Regular emails (gmail.com, yahoo.com, etc.) → Customer account</li>
+                    <li>• Service provider emails (@homehelper.com, @services.com, etc.) → Provider account</li>
+                    <li>• Admin emails (admin@homehelper.com, etc.) → Administrator account</li>
+                  </ul>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
@@ -273,16 +276,6 @@ const RegisterPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        
-        {/* Additional provider info */}
-        {formData.role === UserRole.PROVIDER && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-900">
-              <strong>For Service Providers:</strong> After registration, you'll need to complete your profile
-              and get verified before you can start accepting bookings.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

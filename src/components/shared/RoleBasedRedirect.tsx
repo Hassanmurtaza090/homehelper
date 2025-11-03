@@ -22,7 +22,7 @@ export const RoleBasedRedirect: React.FC = () => {
             navigate(ROUTES.PROVIDER_DASHBOARD);
             break;
           case UserRole.USER:
-            navigate(ROUTES.USER_DASHBOARD);
+            navigate(ROUTES.USER_SERVICES);
             break;
           default:
             navigate(ROUTES.HOME);

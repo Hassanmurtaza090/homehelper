@@ -2,12 +2,56 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import { API_BASE_URL, STORAGE_KEYS, MOCK_API } from './constants';
 import { UserRole, User } from '@/types/user';
 
-// Demo users for mock auth
-const DEMO_USERS: Array<{ email: string; password: string; role: UserRole; name: string }> = [
-  { email: 'user@demo.com', password: 'Demo123!', role: UserRole.USER, name: 'Demo User' },
-  { email: 'provider@demo.com', password: 'Demo123!', role: UserRole.PROVIDER, name: 'Demo Provider' },
-  { email: 'admin@demo.com', password: 'Demo123!', role: UserRole.ADMIN, name: 'Demo Admin' },
+// Demo users for mock auth - role is determined by email pattern
+const DEMO_USERS: Array<{ email: string; password: string; name: string }> = [
+  // Regular users
+  { email: 'john.doe@gmail.com', password: 'Demo123!', name: 'John Doe' },
+  { email: 'jane.smith@yahoo.com', password: 'Demo123!', name: 'Jane Smith' },
+  { email: 'user@demo.com', password: 'Demo123!', name: 'Demo User' },
+  { email: 'customer@example.com', password: 'Demo123!', name: 'Customer Example' },
+  
+  // Service providers - identified by specific email patterns
+  { email: 'alex.provider@homehelper.com', password: 'Demo123!', name: 'Alex Johnson' },
+  { email: 'maria.cleaner@services.com', password: 'Demo123!', name: 'Maria Garcia' },
+  { email: 'mike.plumber@fixit.com', password: 'Demo123!', name: 'Mike Johnson' },
+  { email: 'provider@demo.com', password: 'Demo123!', name: 'Demo Provider' },
+  { email: 'sarah.electrician@homehelper.com', password: 'Demo123!', name: 'Sarah Wilson' },
+  
+  // Admins - identified by admin email patterns
+  { email: 'admin@homehelper.com', password: 'Demo123!', name: 'System Admin' },
+  { email: 'admin@demo.com', password: 'Demo123!', name: 'Demo Admin' },
+  { email: 'support@homehelper.com', password: 'Demo123!', name: 'Support Team' },
 ];
+
+// Function to determine user role based on email pattern
+const determineUserRole = (email: string): UserRole => {
+  const emailLower = email.toLowerCase();
+  
+  // Admin patterns
+  if (emailLower.includes('admin@') || 
+      emailLower.includes('support@homehelper.com') || 
+      emailLower.startsWith('admin.')) {
+    return UserRole.ADMIN;
+  }
+  
+  // Provider patterns
+  if (emailLower.includes('@homehelper.com') ||
+      emailLower.includes('@services.com') ||
+      emailLower.includes('@fixit.com') ||
+      emailLower.includes('provider@') ||
+      emailLower.includes('.provider@') ||
+      emailLower.includes('.cleaner@') ||
+      emailLower.includes('.plumber@') ||
+      emailLower.includes('.electrician@') ||
+      emailLower.includes('.painter@') ||
+      emailLower.includes('.carpenter@') ||
+      emailLower.includes('.gardener@')) {
+    return UserRole.PROVIDER;
+  }
+  
+  // Default to regular user
+  return UserRole.USER;
+};
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
@@ -84,20 +128,31 @@ export const apiClient = {
 // If MOCK_API is enabled, provide mock implementations for auth endpoints
 const mockAuth = {
   login: async (credentials: { email: string; password: string }) => {
+    console.log('🔐 Mock Login Attempt:', credentials);
+    console.log('📋 Available Demo Users:', DEMO_USERS.map(u => ({ email: u.email, name: u.name })));
+    
     const match = DEMO_USERS.find(
       (u) => u.email.toLowerCase() === credentials.email.toLowerCase() && u.password === credentials.password
     );
+    
     if (!match) {
+      console.log('❌ No matching user found for:', credentials.email);
       const error: any = new Error('Invalid email or password');
       error.response = { data: { message: 'Invalid email or password' } };
       throw error;
     }
+    
+    console.log('✅ User found:', match.name, '- Email:', match.email);
+    
+    // Determine role based on email pattern
+    const role = determineUserRole(match.email);
+    
     const token = btoa(`${match.email}:${Date.now()}`);
     const user: User = {
       id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
       email: match.email,
       name: match.name,
-      role: match.role,
+      role: role,
       createdAt: new Date(),
       updatedAt: new Date(),
     } as User;
@@ -115,8 +170,8 @@ const mockAuth = {
     return { success: true };
   },
   register: async (data: any) => {
-    // Accept any registration and return demo token (role optional, default user)
-    const role = data.role || UserRole.USER;
+    // Determine role based on email pattern instead of user selection
+    const role = determineUserRole(data.email);
     const token = btoa(`${data.email}:${Date.now()}`);
     const user: User = {
       id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
@@ -145,8 +200,10 @@ const mockAuth = {
 
 // Auth API endpoints
 export const authAPI = {
-  login: (credentials: { email: string; password: string }) =>
-    MOCK_API ? mockAuth.login(credentials) : apiClient.post('/auth/login', credentials),
+  login: (credentials: { email: string; password: string }) => {
+    console.log('🔧 MOCK_API enabled:', MOCK_API);
+    return MOCK_API ? mockAuth.login(credentials) : apiClient.post('/auth/login', credentials);
+  },
     
   register: (data: any) =>
     MOCK_API ? mockAuth.register(data) : apiClient.post('/auth/register', data),

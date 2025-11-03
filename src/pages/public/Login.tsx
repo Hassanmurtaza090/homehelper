@@ -76,17 +76,6 @@ const LoginPage: React.FC = () => {
     }
   };
   
-  // Demo credentials for testing
-  const fillDemoCredentials = (role: 'user' | 'provider' | 'admin') => {
-    const credentials = {
-      user: { email: 'user@demo.com', password: 'Demo123!' },
-      provider: { email: 'provider@demo.com', password: 'Demo123!' },
-      admin: { email: 'admin@demo.com', password: 'Demo123!' },
-    };
-    
-    setFormData(credentials[role]);
-    setErrors({});
-  };
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -120,36 +109,6 @@ const LoginPage: React.FC = () => {
               </div>
             )}
             
-            {/* Demo credentials buttons */}
-            <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-2">Use demo credentials:</p>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => fillDemoCredentials('user')}
-                  type="button"
-                >
-                  Customer
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => fillDemoCredentials('provider')}
-                  type="button"
-                >
-                  Provider
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => fillDemoCredentials('admin')}
-                  type="button"
-                >
-                  Admin
-                </Button>
-              </div>
-            </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
